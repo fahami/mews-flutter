@@ -1,5 +1,6 @@
 package com.mews.kiosk_mode
 
+import android.os.Build
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
