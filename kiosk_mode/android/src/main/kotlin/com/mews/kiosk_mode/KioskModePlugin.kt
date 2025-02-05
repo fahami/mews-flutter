@@ -70,7 +70,17 @@ class KioskModePlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             return
         }
 
-        result.success(service.lockTaskModeState == ActivityManager.LOCK_TASK_MODE_LOCKED)
+        // Check if this app is in lock task mode. Screen pinning doesn't count.
+        var isLockTaskModeRunning = false
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            isLockTaskModeRunning = service.lockTaskModeState == ActivityManager.LOCK_TASK_MODE_LOCKED
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Deprecated in API level 23.
+            isLockTaskModeRunning = service.isInLockTaskMode
+        }
+
+        result.success(isLockTaskModeRunning)
     }
 
     private fun isInKioskMode(result: MethodChannel.Result) {
